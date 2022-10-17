@@ -181,7 +181,7 @@ export function Banner(props: BannerProps) {
               <span>Translated to:</span>
               <select value={props.language} onChange={handleSelect} aria-label="Language Translate Widget">
                 {
-                  props.supportedLanguages.map(e => <option key={e.languageCode} value={e.languageCode}>{e.displayName}</option>)
+                  props.supportedLanguages.map(e => <option key={e.code} value={e.code}>{e.name}</option>)
                 }
               </select>
             </>}

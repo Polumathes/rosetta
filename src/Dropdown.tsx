@@ -387,7 +387,6 @@ export function Dropdown(props: { options: DropdownOptions }) {
               const data = await translate(options.endpoints.translate, chunk.map(e => e.originalText), options.pageLanguage, language, options.siteName);
               console.log(data)
               setTranslatedNodes(previous => {
-                console.log('previous', previous)
                 const results = previous.slice();
                 for(let i = 0; i < chunk.length; i++) {
                   // find where this chunk's node exists in the state

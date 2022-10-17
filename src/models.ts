@@ -8,8 +8,8 @@ export interface AlertText {
  * Based on: https://cloud.google.com/translate/docs/reference/rest/v3/SupportedLanguages#SupportedLanguage
  */
 export interface SupportedLanguage {
-  languageCode: string;
-  displayName: string;
+  code: string;
+  name: string;
 }
 
 export type TranslatedTextMap = { [languageCode: string]: string | undefined };

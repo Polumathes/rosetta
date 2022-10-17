@@ -28,7 +28,7 @@ export function Dropdown(props: { options: DropdownOptions }) {
   const { data, error: dataError } = useSWR<SupportedLanguage[]>(`${options.endpoints.supportedLanguages}?target=${options.pageLanguage}&siteName=${options.siteName}`);
   const isSupportedLanguageLoading = dataError || !data;
   // store the supported languages seperately from the API call
-  const [supportedLanguages, setSupportedLanguages] = useState<SupportedLanguage[]>([ { displayName: 'Select Language', languageCode: '' } ]);
+  const [supportedLanguages, setSupportedLanguages] = useState<SupportedLanguage[]>([ { name: 'Select Language', code: '' } ]);
   // for UI
   const [language, setLanguage] = useState('');
   const [showBanner, setShowBanner] = useState<boolean>(false);
@@ -288,7 +288,7 @@ export function Dropdown(props: { options: DropdownOptions }) {
         setSupportedLanguages(x => [
           ...x, 
           ...data
-            .filter(e => options.preferredSupportedLanguages.includes(e.languageCode))
+            .filter(e => options.preferredSupportedLanguages.includes(e.code))
         ]);
       }
       else {
@@ -385,7 +385,9 @@ export function Dropdown(props: { options: DropdownOptions }) {
             for(let chunk of chunkedArray(needsTranslating, options.chunkSize)) {
               // actually do translating
               const data = await translate(options.endpoints.translate, chunk.map(e => e.originalText), options.pageLanguage, language, options.siteName);
+              console.log(data)
               setTranslatedNodes(previous => {
+                console.log('previous', previous)
                 const results = previous.slice();
                 for(let i = 0; i < chunk.length; i++) {
                   // find where this chunk's node exists in the state
@@ -439,14 +441,14 @@ export function Dropdown(props: { options: DropdownOptions }) {
     setLanguage(languageCode);
     setSupportedLanguages(x => {
       // check if placeholder exists
-      const placeholderIndex = x.findIndex(e => e.languageCode === '');
+      const placeholderIndex = x.findIndex(e => e.code === '');
       if(placeholderIndex >= 0) {
         // remove if it exists
         x.splice(placeholderIndex, 1);
       }
 
       // move the native language to the top of the list
-      x.unshift(x.splice(x.findIndex(e => e.languageCode === options.pageLanguage), 1)[0]);
+      x.unshift(x.splice(x.findIndex(e => e.code === options.pageLanguage), 1)[0]);
       return x;
     });
   }
@@ -463,7 +465,7 @@ export function Dropdown(props: { options: DropdownOptions }) {
     <div className={`${styles.wrap} skiptranslate`}>
       <select value={language} onChange={e => handleChange(e.target.value)} className={styles.gadgetSelect} aria-label="Language Translate Widget">
         {
-          supportedLanguages.map(e => <option key={e.languageCode} value={e.languageCode}>{e.displayName}</option>)
+          supportedLanguages.map(e => <option key={e.code} value={e.code}>{e.name}</option>)
         }
       </select>
       { options.attributionImageUrl ? <img className={styles.attribution} src={options.attributionImageUrl} /> : <></>}

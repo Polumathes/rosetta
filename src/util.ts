@@ -67,19 +67,24 @@ export function existsInside<T>(array: T[], predicate: (value: T, index: number,
 }
 
 export async function translate(endpoint: string, text: string[], from: string, to: string, siteName: string): Promise<string[]> {
-  const res = await fetch(`${endpoint}?from=${from}&to=${to}&siteName=${siteName}`, {
+  const res = await fetch(endpoint, {
     method: 'POST',
-    body: JSON.stringify(text),
+    body: JSON.stringify({
+      q: text,
+      source: from,
+      target: to
+    }),
     headers: {
       'Content-Type': 'application/json'
-    },
+    }
   });
   const data = await res.json();
   // check types
   if(Array.isArray(data) && data.every(e => typeof e === 'string')) {
     return data
-  }
-  else {
+  } else if ('translatedText' in data && Array.isArray(data.translatedText)) {
+    return data.translatedText
+  } else {
     throw `Data returned from endpoint was not of type string[] (Endpoint: ${endpoint}), data: ${JSON.stringify(data)}`
   }
 }

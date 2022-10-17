@@ -385,7 +385,6 @@ export function Dropdown(props: { options: DropdownOptions }) {
             for(let chunk of chunkedArray(needsTranslating, options.chunkSize)) {
               // actually do translating
               const data = await translate(options.endpoints.translate, chunk.map(e => e.originalText), options.pageLanguage, language, options.siteName);
-              console.log(data)
               setTranslatedNodes(previous => {
                 const results = previous.slice();
                 for(let i = 0; i < chunk.length; i++) {
